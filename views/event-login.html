@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/event-creation.css">
+<title>Event Login</title>
+</head>
+<body>
+
+<div class="container">
+  <h2>Event Login</h2>
+  <form action="/submit-attendance" method="POST">
+    <div class="form-group">
+      <label for="student-name">Your Name:</label>
+      <input type="text" id="student-name" name="studentName" required>
+    </div>
+    <div class="form-group">
+      <label for="student-email">Email:</label>
+      <input type="email" id="student-email" name="studentEmail" required>
+    </div>
+    <input type="hidden" id="event-id" name="eventId" value="">
+    <button type="submit" class="btn">Submit Attendance</button>
+  </form>
+</div>
+
+<script>
+  // Extract the event ID from the URL and set it as the value of the hidden input field
+  document.getElementById('event-id').value = window.location.pathname.split('/').pop();
+</script>
+
+</body>
+</html>

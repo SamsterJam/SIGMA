@@ -1,0 +1,82 @@
+@font-face {
+    font-family: 'BentonSans';
+    src: url('BentonSans-Regular.otf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BentonSans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #1b1b1b;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+h2 {
+    color: #4CAF50; /* Success color */
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+.event-link {
+    margin-bottom: 20px;
+}
+
+.event-link a {
+    color: #06C;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #ddd;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    line-height: 35px;
+}
+
+.event-link a:hover {
+    background-color: #ccc;
+}
+
+.qr-code {
+    margin-bottom: 20px;
+}
+
+.qr-code img {
+    max-width: 100%;
+    height: auto;
+    border: 5px solid #fff;
+    border-radius: 8px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+        max-width: none;
+    }
+}
+
+/* Responsive design for very small screens */
+@media (max-width: 400px) {
+    .container {
+        padding: 10px;
+    }
+}
