@@ -21,8 +21,11 @@ app.post('/create-event', (req, res) => {
     const eventId = uuidv4(); // Generate a unique event ID
     const eventUrl = `http://127.0.0.1:${port}/event/${eventId}`;
 
-    // Log the event data to the console
-    console.log('Event Data:', req.body);
+    // Log the event data to the console, including the UUID
+    console.log('Event Data:', {
+        eventId: eventId,
+        ...req.body
+    });
 
     // Generate a QR code for the event
     QRCode.toDataURL(eventUrl, (err, qrCodeDataUrl) => {
