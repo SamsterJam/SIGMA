@@ -6,20 +6,21 @@ const QRCode = require('qrcode');
 
 const app = express();
 const port = 8001;
+const domain="127.0.0.1"
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the event creation form
+// Event creation form
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'event-creation.html'));
 });
 
-// Handle event creation form submission
+// Event creation form submission
 app.post('/create-event', (req, res) => {
     const eventId = uuidv4(); // Generate a unique event ID
-    const eventUrl = `http://127.0.0.1:${port}/event/${eventId}`;
+    const eventUrl = `http://${domain}:${port}/event/${eventId}`;
 
     // Log the event data to the console, including the UUID
     console.log('Event Data:', {
@@ -48,7 +49,7 @@ app.post('/create-event', (req, res) => {
     });
 });
 
-// Serve the event login page for a specific event ID
+// Event login page
 app.get('/event/:eventId', (req, res) => {
     // The :eventId parameter will be available as req.params.eventId
     const eventId = req.params.eventId;
@@ -57,7 +58,7 @@ app.get('/event/:eventId', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'event-login.html'));
 });
 
-// Handle attendance submission
+// Attendance submission
 app.post('/submit-attendance', (req, res) => {
     // Log the attendance data to the console
     console.log('Attendance Data:', req.body);
