@@ -3,14 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/css/event-creation.css">
+<link rel="stylesheet" href="/css/event-login.css">
 <title>Event Login</title>
 </head>
 <body>
 
 <div class="container">
+    <!-- Modal -->
+  <div id="locationModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Location Required</h2>
+      <p>This event requires location verification!</p>
+      <p>Please enable location permissions for this site in your browser settings and try again.</p>
+      <button id="retryButton" class="btn">Retry</button>
+    </div>
+  </div>
   <h2>Event Login</h2>
-  <form action="/submit-attendance" method="POST">
+  <form id="attendanceForm" action="/submit-attendance" method="POST">
     <div class="form-group">
       <label for="student-name">Your Name:</label>
       <input type="text" id="student-name" name="studentName" required>
@@ -20,13 +30,44 @@
       <input type="email" id="student-email" name="studentEmail" required>
     </div>
     <input type="hidden" id="event-id" name="eventId" value="">
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
     <button type="submit" class="btn">Submit Attendance</button>
   </form>
 </div>
 
 <script>
-  // Extract the event ID from the URL and set it as the value of the hidden input field
-  document.getElementById('event-id').value = window.location.pathname.split('/').pop();
+  var modal = document.getElementById('locationModal');
+  var span = document.getElementsByClassName("close")[0];
+  var retryButton = document.getElementById('retryButton');
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  retryButton.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  function openModal() {
+    modal.style.display = "block";
+  }
+
+  function requestLocation() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      document.getElementById('latitude').value = position.coords.latitude;
+      document.getElementById('longitude').value = position.coords.longitude;
+      document.getElementById('attendanceForm').submit(); // Submit the form
+    }, function(error) {
+      openModal();
+    });
+  }
+
+  // Add the geolocation functionality to the form's submit event
+  document.getElementById('attendanceForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting until we get the location
+    requestLocation(); // Request the user's location
+  });
 </script>
 
 </body>

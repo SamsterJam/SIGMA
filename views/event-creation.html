@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/css/event-creation.css">
 <title>LIGMA Event Creation</title>
+
+<!-- OpenStreetMap Shtuff-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -36,6 +40,16 @@
       <input type="datetime-local" id="event-date-time" name="eventDateTime" required>
     </div>
     <div class="form-group">
+      <label for="location-verification">Enable Location Verification:</label>
+      <input type="checkbox" id="location-verification" name="locationVerification" onchange="toggleMapVisibility()">
+    </div>
+    <div class="form-group map-container" id="map-container" style="display: none;">
+      <label for="map">Select Event Location:</label>
+      <div id="map" style="height: 300px;"></div>
+      <input type="hidden" id="latitude" name="latitude">
+      <input type="hidden" id="longitude" name="longitude">
+    </div>
+    <div class="form-group">
       <label for="password">Authorization Password:</label>
       <input type="password" id="password" name="password" required>
     </div>
@@ -43,5 +57,50 @@
   </form>
 </div>
 
+<script>
+  var map;
+  var marker;
+
+  function initMap() {
+    map = L.map('map').setView([51.505, -0.09], 13); // Set the initial position and zoom level of the map
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add a click event listener to the map to allow users to select a location
+    map.on('click', function(e) {
+      placeMarker(e.latlng);
+    });
+  }
+
+  function placeMarker(latlng) {
+    // If a marker already exists, remove it
+    if (marker) {
+      map.removeLayer(marker);
+    }
+
+    // Create a new marker and set its position
+    marker = L.marker(latlng).addTo(map);
+
+    // Update hidden form fields with latitude and longitude
+    document.getElementById('latitude').value = latlng.lat;
+    document.getElementById('longitude').value = latlng.lng;
+  }
+
+  function toggleMapVisibility() {
+    var mapContainer = document.getElementById('map-container');
+    var checkbox = document.getElementById('location-verification');
+
+    if (checkbox.checked) {
+      mapContainer.style.display = 'block';
+      // Initialize the map
+      initMap();
+    } else {
+      mapContainer.style.display = 'none';
+    }
+  }
+</script>
 </body>
 </html>

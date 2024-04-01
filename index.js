@@ -63,8 +63,14 @@ app.get('/event/:eventId', (req, res) => {
 
 // Attendance submission
 app.post('/submit-attendance', (req, res) => {
-    // Log the attendance data to the console
-    console.log('Attendance Data:', req.body);
+    // Log the attendance data to the console, including location if available
+    console.log('Attendance Data:', {
+        studentName: req.body.studentName,
+        studentEmail: req.body.studentEmail,
+        eventId: req.body.eventId,
+        latitude: req.body.latitude || 'Not provided',
+        longitude: req.body.longitude || 'Not provided'
+    });
 
     // Serve Attendance Submitted Page
     res.sendFile(path.join(__dirname, 'views', 'attendance-submitted.html'));
