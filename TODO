@@ -1,5 +1,5 @@
-[ ]  Create custom 404 page
-[ ]  Address entering for attendance location.
+[X]  Create custom 404 page
+[X]  Address entering for attendance location.
 [ ]  Check location radius for attendance validation.
 [ ]  Provide backup method for location attendance validation.
 [ ]  Make attendance time-sensitive

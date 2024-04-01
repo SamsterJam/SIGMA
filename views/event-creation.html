@@ -48,6 +48,11 @@
       <div id="map" style="height: 300px;"></div>
       <input type="hidden" id="latitude" name="latitude">
       <input type="hidden" id="longitude" name="longitude">
+      <div class="form-group">
+        <label for="address">Or, lookup event adress:</label>
+        <input type="text" id="address" name="address">
+        <button type="button" onclick="geocodeAddress()">Lookup Address</button>
+      </div>
     </div>
     <div class="form-group">
       <label for="password">Authorization Password:</label>
@@ -101,6 +106,32 @@
       mapContainer.style.display = 'none';
     }
   }
+
+  function geocodeAddress() {
+  var address = document.getElementById('address').value;
+  if (address.trim() === '') {
+    alert('Please enter an address.');
+    return;
+  }
+
+  var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address);
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        var latlng = { lat: data[0].lat, lng: data[0].lon };
+        placeMarker(latlng);
+        map.setView(latlng, 15); // Adjust the zoom level as needed
+      } else {
+        alert('Address not found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error during geocoding:', error);
+      alert('Error during geocoding. Please try again.');
+    });
+}
 </script>
 </body>
 </html>
