@@ -1,57 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/css/event-login.css">
-<title>Event Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/event-login.css">
+  <title>Event Login</title>
 </head>
+
 <body>
 
-<div class="container">
+  <div class="container">
     <!-- Modal -->
-  <div id="locationModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Location Required</h2>
-      <p>This event requires location verification!</p>
-      <p>Please enable location permissions for this site in your browser settings and try again.</p>
-      <button id="retryButton" class="btn">Retry</button>
+    <div id="locationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Location Required</h2>
+        <p>This event requires location verification!</p>
+        <p>Please enable location permissions for this site in your browser settings and try again.</p>
+        <button id="retryButton" class="btn">Retry</button>
+      </div>
     </div>
+    <h2>Event Login</h2>
+    <form id="attendanceForm" action="/submit-attendance" method="POST">
+      <div class="form-group">
+        <label for="student-name">Your Name:</label>
+        <input type="text" id="student-name" name="studentName" required>
+      </div>
+      <div class="form-group">
+        <label for="student-email">Email:</label>
+        <input type="email" id="student-email" name="studentEmail" required>
+      </div>
+      <input type="hidden" id="event-id" name="eventId" value="">
+      <input type="hidden" name="latitude" id="latitude">
+      <input type="hidden" name="longitude" id="longitude">
+      <button type="submit" class="btn">Submit Attendance</button>
+    </form>
   </div>
-  <h2>Event Login</h2>
-  <form id="attendanceForm" action="/submit-attendance" method="POST">
-    <div class="form-group">
-      <label for="student-name">Your Name:</label>
-      <input type="text" id="student-name" name="studentName" required>
-    </div>
-    <div class="form-group">
-      <label for="student-email">Email:</label>
-      <input type="email" id="student-email" name="studentEmail" required>
-    </div>
-    <input type="hidden" id="event-id" name="eventId" value="">
-    <input type="hidden" name="latitude" id="latitude">
-    <input type="hidden" name="longitude" id="longitude">
-    <button type="submit" class="btn">Submit Attendance</button>
-  </form>
-</div>
 
-<script>
-  var modal = document.getElementById('locationModal');
-  var span = document.getElementsByClassName("close")[0];
-  var retryButton = document.getElementById('retryButton');
+  <script>
+    var modal = document.getElementById('locationModal');
+    var span = document.getElementsByClassName("close")[0];
+    var retryButton = document.getElementById('retryButton');
+    var form = document.getElementById('attendanceForm');
 
-  span.onclick = function() {
-    modal.style.display = "none";
-  }
+    span.onclick = function () {
+      modal.style.display = "none";
+    }
 
-  retryButton.onclick = function() {
-    modal.style.display = "none";
-  }
+    retryButton.onclick = function () {
+      modal.style.display = "none";
+    }
 
-  function openModal() {
-    modal.style.display = "block";
-  }
+    function openModal() {
+      modal.style.display = "block";
+    }
 
     // Function to extract the eventId from the URL
     function getEventIdFromUrl() {
@@ -60,28 +63,44 @@
       return pathArray[eventIdIndex];
     }
 
-    // Set the eventId in the hidden input field when the page loads
-    window.onload = function() {
+    function requestLocation(event) {
+      event.preventDefault(); // Prevent the form from submitting until we get the location
+      navigator.geolocation.getCurrentPosition(function (position) {
+        document.getElementById('latitude').value = position.coords.latitude;
+        document.getElementById('longitude').value = position.coords.longitude;
+        form.submit(); // Submit the form
+      }, function (error) {
+        openModal();
+      });
+    }
+
+    // Fetch event data from the server and update the form
+    window.onload = async function () {
       const eventId = getEventIdFromUrl();
       document.getElementById('event-id').value = eventId;
+
+      try {
+        const response = await fetch(`/api/event/${eventId}`);
+        if (!response.ok) {
+          throw new Error('Event not found');
+        }
+        const eventData = await response.json();
+
+        // Check if location verification is required
+        if (eventData.locationVerification) {
+          // Modify the form's submit event to request location
+          form.addEventListener('submit', requestLocation);
+        } else {
+          // If location verification is not required, allow the form to submit normally
+          form.removeEventListener('submit', requestLocation);
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle error (e.g., show an error message to the user)
+      }
     };
-
-  function requestLocation() {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      document.getElementById('latitude').value = position.coords.latitude;
-      document.getElementById('longitude').value = position.coords.longitude;
-      document.getElementById('attendanceForm').submit(); // Submit the form
-    }, function(error) {
-      openModal();
-    });
-  }
-
-  // Add the geolocation functionality to the form's submit event
-  document.getElementById('attendanceForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting until we get the location
-    requestLocation(); // Request the user's location
-  });
-</script>
+  </script>
 
 </body>
+
 </html>

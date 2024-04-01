@@ -7,6 +7,45 @@ const QRCode = require('qrcode');
 const app = express();
 const port = 8001;
 const domain = "127.0.0.1";
+const databaseName = "TEST-LIGMA"
+const eventCreationPassword = "badpassword"
+
+const mongoose = require('mongoose');
+
+
+
+mongoose.connect(`mongodb://localhost:27017/${databaseName}`);
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log('Connected to MongoDB');
+});
+
+const eventSchema = new mongoose.Schema({
+    eventId: String,
+    organizerName: String,
+    email: String,
+    eventName: String,
+    description: String,
+    eventDateTime: String,
+    locationVerification: Boolean,
+    latitude: String,
+    longitude: String,
+    password: String,
+});
+
+const attendanceSchema = new mongoose.Schema({
+    studentName: String,
+    studentEmail: String,
+    eventId: String,
+    latitude: String,
+    longitude: String,
+});
+
+const Event = mongoose.model('Event', eventSchema);
+const Attendance = mongoose.model('Attendance', attendanceSchema);
+
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,8 +57,12 @@ app.get('/', (req, res) => {
 });
 
 // Event creation form submission
-app.post('/create-event', (req, res, next) => {
+app.post('/create-event', async (req, res, next) => {
     try {
+        if (req.body.password !== eventCreationPassword) {
+            // If the password is incorrect, send an alert to the client
+            return res.send(`<script>alert('Incorrect password!'); history.back();</script>`);
+        }
         const eventId = uuidv4(); // Generate a unique event ID
         const eventUrl = `http://${domain}:${port}/event/${eventId}`;
 
@@ -28,6 +71,22 @@ app.post('/create-event', (req, res, next) => {
             eventId: eventId,
             ...req.body
         });
+
+        // Create a new event object
+        const newEvent = new Event({
+            eventId: eventId,
+            organizerName: req.body.organizerName,
+            email: req.body.email,
+            eventName: req.body.eventName,
+            description: req.body.description,
+            eventDateTime: req.body.eventDateTime,
+            locationVerification: req.body.locationVerification === 'on',
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+        });
+
+        // Save the event to the database
+        await newEvent.save();
 
         // Generate a QR code for the event
         QRCode.toDataURL(eventUrl, (err, qrCodeDataUrl) => {
@@ -53,27 +112,76 @@ app.post('/create-event', (req, res, next) => {
 });
 
 // Event login page
-app.get('/event/:eventId', (req, res) => {
-    // The :eventId parameter will be available as req.params.eventId
-    const eventId = req.params.eventId;
+app.get('/event/:eventId', async (req, res, next) => {
+    try {
+        const eventId = req.params.eventId;
+        const event = await Event.findOne({ eventId: eventId });
 
-    // Here you would normally fetch event data using eventId, but for now, we'll just serve the page
-    res.sendFile(path.join(__dirname, 'views', 'event-login.html'));
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+
+        // Serve the event login HTML page with embedded event data
+        res.sendFile(path.join(__dirname, 'views', 'event-login.html'), {
+            headers: {
+                'Content-Type': 'text/html'
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// API route to get event data
+app.get('/api/event/:eventId', async (req, res, next) => {
+    try {
+        const eventId = req.params.eventId;
+        const event = await Event.findOne({ eventId: eventId });
+
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+
+        // Send the event data as JSON
+        res.json({
+            eventId: event.eventId,
+            locationVerification: event.locationVerification,
+            // Include any other event properties you need on the client-side
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Attendance submission
-app.post('/submit-attendance', (req, res) => {
-    // Log the attendance data to the console, including location if available
-    console.log('Attendance Data:', {
-        studentName: req.body.studentName,
-        studentEmail: req.body.studentEmail,
-        eventId: req.body.eventId,
-        latitude: req.body.latitude || 'Not provided',
-        longitude: req.body.longitude || 'Not provided'
-    });
+app.post('/submit-attendance', async (req, res, next) => {
+    try {
+        // Log the attendance data to the console, including location if available
+        console.log('Attendance Data:', {
+            studentName: req.body.studentName,
+            studentEmail: req.body.studentEmail,
+            eventId: req.body.eventId,
+            latitude: req.body.latitude || 'Not provided',
+            longitude: req.body.longitude || 'Not provided'
+        });
 
-    // Serve Attendance Submitted Page
-    res.sendFile(path.join(__dirname, 'views', 'attendance-submitted.html'));
+        // Create a new attendance object
+        const newAttendance = new Attendance({
+            studentName: req.body.studentName,
+            studentEmail: req.body.studentEmail,
+            eventId: req.body.eventId,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+        });
+
+        // Save the attendance to the database
+        await newAttendance.save();
+
+        // Serve Attendance Submitted Page
+        res.sendFile(path.join(__dirname, 'views', 'attendance-submitted.html'));
+    } catch (error) {
+        next(error); // Pass the error to the error handling middleware
+    }
 });
 
 app.get('/event-created', (req, res) => {
@@ -89,4 +197,35 @@ app.use((err, req, res, next) => {
 // Listen on the specified port
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+
+
+
+// ### ==== DEBUG - REMOVE BEFORE PUBLISHING === ### \\\
+
+
+// Route to list all events with their attending students
+app.get('/events-with-attendees', async (req, res, next) => {
+    try {
+        // Find all events
+        const events = await Event.find();
+
+        // For each event, find the corresponding attendance records
+        const eventsWithAttendees = await Promise.all(events.map(async (event) => {
+            const attendees = await Attendance.find({ eventId: event.eventId });
+            return {
+                ...event.toObject(),
+                attendees: attendees.map(attendee => ({
+                    studentName: attendee.studentName,
+                    studentEmail: attendee.studentEmail
+                }))
+            };
+        }));
+
+        // Send the result back to the client
+        res.json(eventsWithAttendees);
+    } catch (error) {
+        next(error);
+    }
 });
