@@ -186,7 +186,7 @@ app.get('/event-created', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'event-created.html'));
 });
 
-// Error handling
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack); // Log the error stack to the console
     res.status(500).sendFile(path.join(__dirname, 'views', 'error.html')); // Send the error page
@@ -202,7 +202,6 @@ app.listen(port, () => {
 
 // ### ==== DEBUG - REMOVE BEFORE PUBLISHING === ### \\\
 
-
 // Route to list all events with their attending students
 app.get('/events-with-attendees', async (req, res, next) => {
     try {
@@ -217,7 +216,9 @@ app.get('/events-with-attendees', async (req, res, next) => {
                 attendees: attendees.map(attendee => ({
                     studentName: attendee.studentName,
                     studentEmail: attendee.studentEmail,
-                    submittedAt: attendee.submittedAt
+                    submittedAt: attendee.submittedAt,
+                    latitude: attendee.latitude,
+                    longitude: attendee.longitude,
                 }))
             };
         }));
@@ -227,4 +228,19 @@ app.get('/events-with-attendees', async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+});
+
+
+
+
+
+
+
+
+
+
+
+// Custom 404 page middleware
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
