@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'BentonSans';
+    src: url('BentonSans-Regular.otf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BentonSans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #1b1b1b;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.message {
+    background: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    border-bottom: 1px solid #F25B19;
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+@media (max-width: 400px) {
+    .message {
+        padding: 10px;
+        width: calc(100% - 20px);
+    }
+}
