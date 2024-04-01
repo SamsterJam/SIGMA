@@ -32,7 +32,6 @@ const eventSchema = new mongoose.Schema({
     locationVerification: Boolean,
     latitude: String,
     longitude: String,
-    password: String,
 });
 
 const attendanceSchema = new mongoose.Schema({
@@ -41,6 +40,7 @@ const attendanceSchema = new mongoose.Schema({
     eventId: String,
     latitude: String,
     longitude: String,
+    submittedAt: { type: Date, default: Date.now } 
 });
 
 const Event = mongoose.model('Event', eventSchema);
@@ -156,15 +156,6 @@ app.get('/api/event/:eventId', async (req, res, next) => {
 // Attendance submission
 app.post('/submit-attendance', async (req, res, next) => {
     try {
-        // Log the attendance data to the console, including location if available
-        console.log('Attendance Data:', {
-            studentName: req.body.studentName,
-            studentEmail: req.body.studentEmail,
-            eventId: req.body.eventId,
-            latitude: req.body.latitude || 'Not provided',
-            longitude: req.body.longitude || 'Not provided'
-        });
-
         // Create a new attendance object
         const newAttendance = new Attendance({
             studentName: req.body.studentName,
@@ -176,6 +167,13 @@ app.post('/submit-attendance', async (req, res, next) => {
 
         // Save the attendance to the database
         await newAttendance.save();
+
+        // Log the attendance data to the console, including the submission time
+        console.log('Attendance Data:', {
+            ...newAttendance.toObject(),
+            latitude: newAttendance.latitude || 'Not provided',
+            longitude: newAttendance.longitude || 'Not provided'
+        });
 
         // Serve Attendance Submitted Page
         res.sendFile(path.join(__dirname, 'views', 'attendance-submitted.html'));
@@ -218,7 +216,8 @@ app.get('/events-with-attendees', async (req, res, next) => {
                 ...event.toObject(),
                 attendees: attendees.map(attendee => ({
                     studentName: attendee.studentName,
-                    studentEmail: attendee.studentEmail
+                    studentEmail: attendee.studentEmail,
+                    submittedAt: attendee.submittedAt
                 }))
             };
         }));
