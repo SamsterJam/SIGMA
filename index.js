@@ -32,6 +32,7 @@ const eventSchema = new mongoose.Schema({
     locationVerification: Boolean,
     latitude: String,
     longitude: String,
+    radius: Number,
 });
 
 const attendanceSchema = new mongoose.Schema({
@@ -83,6 +84,7 @@ app.post('/create-event', async (req, res, next) => {
             locationVerification: req.body.locationVerification === 'on',
             latitude: req.body.latitude,
             longitude: req.body.longitude,
+            radius: req.body.radius, 
         });
 
         // Save the event to the database
