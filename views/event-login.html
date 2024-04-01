@@ -53,6 +53,19 @@
     modal.style.display = "block";
   }
 
+    // Function to extract the eventId from the URL
+    function getEventIdFromUrl() {
+      const pathArray = window.location.pathname.split('/');
+      const eventIdIndex = pathArray.findIndex(element => element === 'event') + 1;
+      return pathArray[eventIdIndex];
+    }
+
+    // Set the eventId in the hidden input field when the page loads
+    window.onload = function() {
+      const eventId = getEventIdFromUrl();
+      document.getElementById('event-id').value = eventId;
+    };
+
   function requestLocation() {
     navigator.geolocation.getCurrentPosition(function(position) {
       document.getElementById('latitude').value = position.coords.latitude;
