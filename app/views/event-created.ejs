@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Created</title>
+<link rel="stylesheet" href="/css/event-created.css">
+</head>
+<body>
+
+<!-- file requires qrCodeDataUrl and eventUrl -->
+<div class="container">
+  <h2>Event Created Successfully!</h2>
+  <p>Share the following link and QR code with the attendees:</p>
+  <div class="event-link">
+      <a id="event-link" href="<%=eventUrl%>"><%=eventUrl%></a>
+  </div>
+  <div class="qr-code">
+    <img id="qr-code" src="<%=qrCodeDataUrl%>" alt="Event QR Code">
+  </div>
+</div>
+
+</body>
+</html>

@@ -34,7 +34,7 @@
         <label for="student-email">Email:</label>
         <input type="email" id="student-email" name="studentEmail" required>
       </div>
-      <input type="hidden" id="event-id" name="eventId" value="">
+      <input type="hidden" id="event-id" name="eventId" value="<%=eventID%>">
       <input type="hidden" name="latitude" id="latitude">
       <input type="hidden" name="longitude" id="longitude">
       <button type="submit" class="btn">Submit Attendance</button>
@@ -59,13 +59,6 @@
       modal.style.display = "block";
     }
 
-    // Function to extract the eventId from the URL
-    function getEventIdFromUrl() {
-      const pathArray = window.location.pathname.split('/');
-      const eventIdIndex = pathArray.findIndex(element => element === 'event') + 1;
-      return pathArray[eventIdIndex];
-    }
-
     function requestLocation(event) {
       event.preventDefault(); // Prevent the form from submitting until we get the location
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -79,8 +72,7 @@
 
     // Fetch event data from the server and update the form
     window.onload = async function () {
-      const eventId = getEventIdFromUrl();
-      document.getElementById('event-id').value = eventId;
+      const eventId = document.getElementById('event-id').value;
 
       try {
         const response = await fetch(`/api/event/${eventId}`);
