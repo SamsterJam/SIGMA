@@ -201,7 +201,7 @@ app.get('/event-created', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack); /
+    console.error(err.stack);
     res.status(500).sendFile(path.join(__dirname, 'views', 'error.html'));
 });
 
