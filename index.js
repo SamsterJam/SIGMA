@@ -61,7 +61,6 @@ app.get('/', (req, res) => {
 app.post('/create-event', async (req, res, next) => {
     try {
         if (req.body.password !== eventCreationPassword) {
-            // If the password is incorrect, send an alert to the client
             return res.send(`<script>alert('Incorrect password!'); history.back();</script>`);
         }
         const eventId = uuidv4(); // Generate a unique event ID
@@ -87,7 +86,7 @@ app.post('/create-event', async (req, res, next) => {
             radius: req.body.radius, 
         });
 
-        // Save the event to the database
+        
         await newEvent.save();
 
         // Generate a QR code for the event
@@ -96,7 +95,6 @@ app.post('/create-event', async (req, res, next) => {
                 throw err; // Pass the error to the error handling middleware
             }
 
-            // Store the event URL and QR code data URL in the session storage
             const script = `
                 <script>
                 sessionStorage.setItem('eventUrl', '${eventUrl}');
@@ -105,11 +103,10 @@ app.post('/create-event', async (req, res, next) => {
                 </script>
             `;
 
-            // Send the script to the client to execute
             res.send(script);
         });
     } catch (error) {
-        next(error); // Pass the error to the error handling middleware
+        next(error);
     }
 });
 
@@ -148,7 +145,6 @@ app.get('/api/event/:eventId', async (req, res, next) => {
         res.json({
             eventId: event.eventId,
             locationVerification: event.locationVerification,
-            // Include any other event properties you need on the client-side
         });
     } catch (error) {
         next(error);
@@ -158,26 +154,41 @@ app.get('/api/event/:eventId', async (req, res, next) => {
 // Attendance submission
 app.post('/submit-attendance', async (req, res, next) => {
     try {
-        // Create a new attendance object
+        const { studentName, studentEmail, eventId, latitude, longitude } = req.body;
+
+        // Find the event to get its location and radius
+        const event = await Event.findOne({ eventId: eventId });
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+
+        // Check if location verification is required
+        if (event.locationVerification) {
+            const distance = calculateApproximateDistance(
+                event.latitude,
+                event.longitude,
+                latitude,
+                longitude
+            );
+
+            if (distance > event.radius) {
+                return res.status(400).send('You are not within the required radius of the event location.');
+            }
+        }
+
         const newAttendance = new Attendance({
-            studentName: req.body.studentName,
-            studentEmail: req.body.studentEmail,
-            eventId: req.body.eventId,
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
+            studentName,
+            studentEmail,
+            eventId,
+            latitude,
+            longitude,
         });
 
         // Save the attendance to the database
         await newAttendance.save();
 
-        // Log the attendance data to the console, including the submission time
-        console.log('Attendance Data:', {
-            ...newAttendance.toObject(),
-            latitude: newAttendance.latitude || 'Not provided',
-            longitude: newAttendance.longitude || 'Not provided'
-        });
+        console.log('Attendance Data:', newAttendance);
 
-        // Serve Attendance Submitted Page
         res.sendFile(path.join(__dirname, 'views', 'attendance-submitted.html'));
     } catch (error) {
         next(error); // Pass the error to the error handling middleware
@@ -190,8 +201,8 @@ app.get('/event-created', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack); // Log the error stack to the console
-    res.status(500).sendFile(path.join(__dirname, 'views', 'error.html')); // Send the error page
+    console.error(err.stack); /
+    res.status(500).sendFile(path.join(__dirname, 'views', 'error.html'));
 });
 
 // Listen on the specified port
@@ -199,6 +210,29 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
+
+
+// WIP distance Caluclation
+function calculateApproximateDistance(lat1, lon1, lat2, lon2) {
+    const toRadians = degree => degree * Math.PI / 180;
+
+    const R = 6371000;
+
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+
+    const lat1Rad = toRadians(lat1);
+    const lat2Rad = toRadians(lat2);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1Rad) * Math.cos(lat2Rad);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Distance in meters
+    const distance = R * c;
+
+    return distance;
+}
 
 
 

@@ -99,6 +99,34 @@
         // Handle error (e.g., show an error message to the user)
       }
     };
+
+
+    // Function to calculate an approximate distance between two points
+    function calculateApproximateDistance(lat1, lon1, lat2, lon2) {
+      // Convert degrees to radians
+      const toRadians = degree => degree * Math.PI / 180;
+
+      // Earth's radius in meters
+      const R = 6371000;
+
+      // Delta coordinates in radians
+      const dLat = toRadians(lat2 - lat1);
+      const dLon = toRadians(lon2 - lon1);
+
+      // Convert latitudes to radians
+      const lat1Rad = toRadians(lat1);
+      const lat2Rad = toRadians(lat2);
+
+      // Approximate distance calculation (Pythagorean theorem)
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1Rad) * Math.cos(lat2Rad);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      // Distance in meters
+      const distance = R * c;
+
+      return distance;
+    }
   </script>
 
 </body>
