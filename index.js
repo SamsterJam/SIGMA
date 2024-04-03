@@ -60,9 +60,9 @@ const createEvent = require(path.join(CONTROLLERS_DIR, 'create-event.js'));
 // Event creation form submission
 app.use('/create-event', createEvent);
 
-const api_event = require(path.join(CONTROLLERS_DIR, 'api/event.js'));
+const api = require(path.join(CONTROLLERS_DIR, 'api/api.js'));
 // API route to get event data
-app.use('/api/event', api_event);
+app.use('/api', api);
 
 
 const submit_attendence = require(path.join(CONTROLLERS_DIR, 'submit-attendance.js'));
