@@ -17,7 +17,8 @@ router.get('/:eventId', async (req, res, next) => {
 
         // Serve the event login HTML page with embedded event data
         res.render('event-login', {
-            eventID: eventId
+            eventID: eventId,
+            extraInfo: event.req_mcy
         });
     } catch (error) {
         next(error);

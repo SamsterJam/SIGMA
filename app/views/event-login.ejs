@@ -13,6 +13,7 @@
     <img src="/img/IU-tab.png" alt="Tab Image" class="tab-image">
   </div>
 
+  <!-- Needed Varibles: eventID, extraInfo -->
   <div class="container">
     <!-- Modal -->
     <div id="locationModal" class="modal">
@@ -34,6 +35,20 @@
         <label for="student-email">Email:</label>
         <input type="email" id="student-email" name="studentEmail" required>
       </div>
+      <% if (extraInfo) { %>
+      <div class="form-group">
+        <label for="major">Major:</label>
+        <input type="text" id="student-major" name="major" required>
+      </div>
+      <div class="form-group">
+        <label for="cohort">Cohort:</label>
+        <input type="number" id="student-cohort" name="cohort" required>
+      </div>
+      <div class="form-group">
+        <label for="year">Year:</label>
+        <input type="number" id="student-year" name="year" required>
+      </div>
+      <% } %>
       <input type="hidden" id="event-id" name="eventId" value="<%=eventID%>">
       <input type="hidden" name="latitude" id="latitude">
       <input type="hidden" name="longitude" id="longitude">

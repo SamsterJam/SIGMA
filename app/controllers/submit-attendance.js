@@ -29,10 +29,12 @@ router.post('/', async (req, res, next) => {
             }
         }
 
-        let d = new Date();
-        let time = d.getTime();//gets time in unix millis
+        let time = Date.now();
         //save attendance to database
-        let arr = [studentName, studentEmail, eventId, time,  major, cohort];
+
+        //return and add an if statement that will add major and cohort if event requires it
+        let arr = [studentName, studentEmail, eventId, time];
+        if ( event.req_mcy ) arr.concat([req.body.major, req.body.cohort, req.body.year]);
         const newAttendance = await db.submitAttendance(arr);
 
         console.log('Attendance Data:', arr.concat([latitude, longitude]));

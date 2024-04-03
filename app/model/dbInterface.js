@@ -25,8 +25,17 @@ class dbInterface {
     }
 
     submitAttendance(array) {
-        const text = "INSERT INTO attended (user_name, email, event_id, time, major, cohort) VALUES ( $1, $2, $3, $4, $5, $6);"
-        return this.client.query(text, array);
+        var text;
+        switch (array.length) {
+            case 7:
+                text = "INSERT INTO attended (user_name, email, event_id, time, major, cohort, year) VALUES ( $1, $2, $3, $4, $5, $6, $7);"
+                return this.client.query(text, array);
+            case 4:
+                text = "INSERT INTO attended (user_name, email, event_id, time) VALUES ( $1, $2, $3, $4);"
+                return this.client.query(text, array);
+            default:
+                throw new Error("invalid array passed to submitAttendance.");
+        }
     }
 
     getEventData(eventID, password) {
@@ -42,19 +51,19 @@ class dbInterface {
         //depending on the error information could be revealed
         var text;
         switch (array.length) {
-            case 11:
-                text = "INSERT INTO events (org_name, org_email, event_id, event_name, event_desc, event_date, event_pass, location_Veri, latitude, longitude, radius) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);"
+            case 12:
+                text = "INSERT INTO events (org_name, org_email, event_id, event_name, req_mcy, event_desc, event_date, event_pass, location_Veri, latitude, longitude, radius) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);"
                 return this.client.query(text, array);
-            case 10:
-                text = "INSERT INTO events (org_name, org_email, event_id, event_name, event_date, event_pass, location_Veri, latitude, longitude, radius) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);"
+            case 11:
+                text = "INSERT INTO events (org_name, org_email, event_id, event_name, req_mcy, event_date, event_pass, location_Veri, latitude, longitude, radius) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);"
                 //no desc
                 return this.client.query(text, array);
-            case 8:
-                text = "INSERT INTO events (org_name, org_email, event_id, event_name, event_desc, event_date, event_pass, location_Veri) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);"
+            case 9:
+                text = "INSERT INTO events (org_name, org_email, event_id, event_name, req_mcy, event_desc, event_date, event_pass, location_Veri) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);"
                 //desc but no longitude
                 return this.client.query(text, array);
-            case 7:
-                text = "INSERT INTO events (org_name, org_email, event_id, event_name, event_date, event_pass, location_Veri) VALUES ($1, $2, $3, $4, $5, $6, $7);"
+            case 8:
+                text = "INSERT INTO events (org_name, org_email, event_id, event_name, req_mcy, event_date, event_pass, location_Veri) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);"
                 //no lonigitude or desc
                 return this.client.query(text, array);
             default:
@@ -72,5 +81,4 @@ module.exports = dbInterface;
 //const Attendance = mongoose.model('Attendance', attendanceSchema);
 
 
-//                text = "INSERT INTO events (org_name, org_email, event_id, event_name, event_desc, event_date, event_pass, location_Veri, latitude, longitude, radius) VALUES ('$1', '$2', '$3', '$4', '$5', $6, '$7', $8, $9, $10, $11);"
 
