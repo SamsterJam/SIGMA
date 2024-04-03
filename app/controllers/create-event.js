@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
             ...req.body
         });
 
-        let arr = [req.body.organizerName, req.body.email, eventId, req.body.eventName, req.body.extra_info];
+        let arr = [req.body.organizerName, req.body.email, eventId, req.body.eventName, req.body.extra_info === 'on'];
         if ( req.body.description ) arr = arr.concat([req.body.description]);
         arr = arr.concat([req.body.eventDateTime, req.body.password, req.body.locationVerification === 'on']);
 

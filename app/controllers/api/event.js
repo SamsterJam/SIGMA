@@ -17,8 +17,8 @@ router.get('/:eventId', async (req, res, next) => {
 
         // Send the event data as JSON
         res.json({
-            eventId: event.event_id,
-            locationVerification: event.location_Veri,
+            eventId: event.rows[0].event_id,
+            locationVerification: event.rows[0].location_veri
         });
     } catch (error) {
         next(error);

@@ -7,43 +7,68 @@ const db = new dbInterface();
 
 router.post('/', async (req, res, next) => {
     try {
-        const { studentName, studentEmail, eventId, latitude, longitude } = req.body;
-
-        // Find the event to get its location and radius
-        const event = await db.getEvent(eventId);
+        const event = await db.getEvent(req.body.eventId);
         if (!event) {
             return res.status(404).send('Event not found');
         }
 
         // Check if location verification is required
-        if (event.location_Veri) {
+        if (event.rows[0].location_veri) {
             const distance = calculateApproximateDistance(
-                event.latitude,
-                event.longitude,
-                latitude,
-                longitude
+                event.rows[0].latitude,
+                event.rows[0].longitude,
+                req.body.latitude,
+                req.body.longitude
             );
 
-            if (distance > event.radius) {
+            if (distance > event.rows[0].radius) {
                 return res.status(400).send('You are not within the required radius of the event location.');
             }
         }
 
-        let time = Date.now();
-        //save attendance to database
+        let time = getTimeStamp();
+        //gets timeStamp
 
-        //return and add an if statement that will add major and cohort if event requires it
-        let arr = [studentName, studentEmail, eventId, time];
-        if ( event.req_mcy ) arr.concat([req.body.major, req.body.cohort, req.body.year]);
+        let tempArr = [];
+        if (event.rows[0].req_mcy) {
+            tempArr = [req.body.major, req.body.cohort, req.body.year];
+            console.log(tempArr);
+        }
+        let arr = [req.body.studentName, req.body.studentEmail, req.body.eventId, time];
+        arr = arr.concat(tempArr);
+        //
+        //save attendance to database
         const newAttendance = await db.submitAttendance(arr);
 
-        console.log('Attendance Data:', arr.concat([latitude, longitude]));
+        console.log('Attendance Data:', arr.concat([req.body.latitude, req.body.longitude]));
 
         res.render('attendance-submitted');
     } catch (error) {
         next(error); // Pass the error to the error handling middleware
     }
 });
+
+//returns current time in yyyy-mm-ddThh:mm format
+function getTimeStamp() {
+    let date = new Date();
+    let str = String(date.getFullYear());
+    str += "-" + makePadded(date.getMonth(), 2);
+    str += "-" + makePadded(date.getDay(), 2);
+    str += "T" + makePadded(date.getHours(), 2);
+    str += ":" + makePadded(date.getMinutes(), 2);
+    return str;
+}
+
+//padd string e.g. makePadded(1, 2) = "01"
+function makePadded(num, padCount) {
+    let numLen = String(num).length;
+    let ret = String(num);
+    for (let i = 0; i < (padCount - numLen); i++) {
+        ret = "0" + ret;
+    }
+    return ret;
+}
+
 
 //wip
 function calculateApproximateDistance(lat1, lon1, lat2, lon2) {

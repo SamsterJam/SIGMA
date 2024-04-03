@@ -17,6 +17,8 @@ class dbInterface {
         //add in code to handle connection error
     }
 
+    //data will be stored in the rows field of return value
+    //example: const event = this.getEvent(eventId); let eventName = event.rows[0].event_name
     getEvent(eventID) {
         return this.client.query({
             text: "SELECT * FROM events WHERE event_id = $1;",
