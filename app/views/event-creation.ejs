@@ -20,7 +20,8 @@
       <img src="/img/IU-tab.png" alt="Tab Image" class="tab-image">
     </div>
 
-    <form action="/create-event" method="POST">
+    <form id="create-event-forum" action="/create-event" method="POST">
+      <input type="submit" id="hidden-submit" hidden>
       <div class="form-group">
         <label for="organizer-name">Your Full Name:</label>
         <input type="text" id="organizer-name" name="organizerName" required>
@@ -29,9 +30,13 @@
         <label for="email">IU Email:</label>
         <input type="email" id="email" name="email" required>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="eventName-field">
         <label for="event-name">Event Name:</label>
         <input type="text" id="event-name" name="eventName" required>
+        <div class="error-container" id="errorPopUp"> <!-- Here to allow for easy testing to make look nice. remove in production -->
+            <button class="error-button" onclick="document.getElementById('errorPopUp').remove()">temp</button>
+            <p class="error-text">Event Name Taken</p>
+        </div>
       </div>
       <div class="form-group">
         <label for="description">Event Description:</label>
@@ -70,7 +75,7 @@
         <label for="password">Authorization Password:</label>
         <input type="password" id="password" name="password" required>
       </div>
-      <button type="submit" class="btn">Create Event</button>
+      <button type="button"  class="btn" onclick="trySubmit()">Create Event</button>
     </form>
   </div>
 
@@ -164,6 +169,29 @@
           }
         })
     }
+
+    async function trySubmit() {
+        var name = document.getElementById('event-name').value;
+        try {
+            const res = await fetch(`/api/name_taken?name=${name}`);
+            const data = await res.json();
+
+            if (data.isTaken) {
+                let div = document.createElement("div");
+                div.setAttribute("class", "error-container");
+                div.setAttribute("id", "errorPopUp");
+                div.innerHTML = '<button class="error-button" onclick="document.getElementById(`errorPopUp`).remove()">temp</button> <p class="error-text">Event Name Taken</p>'
+                document.getElementById("eventName-field").appendChild(div);//creates error popup
+            } else {
+                document.getElementById('hidden-submit').click();//submits
+                //We submit through a button rather than forum.submit() because it causes the browser to autmatically check
+                //if all required fields are filled in. with forum.submit() we'd have to implement that ourselves.
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
   </script>
 </body>
 

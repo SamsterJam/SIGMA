@@ -11,6 +11,18 @@ router.post('/', async (req, res, next) => {
     try {
         const eventId = uuidv4(); // Generate a unique event ID
         const eventUrl = `http://${root.domain}:${root.port}/event/${eventId}`;
+        //check if event is taken to fail cleanly
+
+        /* keeping code here because it could be modified to display an error message without using in page javascript
+         * If we were to turn this into an actual web app, it's generally good practice to support no-script
+        if (await db.nameExists(req.body.eventName)) {
+            res.status(200).render( 'event-creation', {
+            //args representing the forum values
+            });
+            return
+        }
+        */
+
 
         // Log the event data to the console, including the UUID
         console.log('Event Data:', {

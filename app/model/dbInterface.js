@@ -26,6 +26,14 @@ class dbInterface {
         });
     }
 
+    async nameExists(eventName) {
+        const res = await this.client.query({
+            text: "SELECT event_name FROM events WHERE event_name = $1",
+            values: [eventName]
+        });
+        return (res.rowCount > 0);
+    }
+
     submitAttendance(array) {
         var text;
         switch (array.length) {

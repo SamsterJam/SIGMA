@@ -44,5 +44,18 @@ router.get('/event_data/:eventId', async (req, res, next) => {
     }
 });
 
+router.get('/name_taken', async (req, res, next) => {
+    try {
+        const eventName = req.query.name;
+        const bool = await db.nameExists(eventName);
+
+        res.json({
+            isTaken: bool
+        });
+    } catch(error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;
