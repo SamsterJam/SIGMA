@@ -17,6 +17,7 @@ exports.handleFormSubmission = async (req, res, next) => {
         }
 
         const eventData = await db.getEventData(event.event_id, password);
+        console.log(eventData);
         res.render('event-data', { data: eventData }); // Pass the rows array to the view
     } catch (error) {
         next(error);

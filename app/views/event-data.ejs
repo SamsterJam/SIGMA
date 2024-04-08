@@ -3,7 +3,7 @@
 <head>
     <title>Event Data</title>
     <link rel="stylesheet" href="/css/data-view.css">
-    <!-- Replace 'your-stylesheet-name.css' with the actual path to your CSS file -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="container">
@@ -11,7 +11,7 @@
         <% if (data && data.length > 0) { %>
             <% data.forEach(function(row) { %>
                 <div class="chip">
-                    <%= row.user_name %> - <%= row.email %> - <%= row.event_id %> - <%= new Date(row.time).toLocaleString() %>
+                    <%= row.user_name %> - <%= row.email %> - <%= row.event_id %> - <%= new Date(row.time).toLocaleString() %> - <%= row.cohort %> - <%= row.year %>
                 </div>
             <% }); %>
         <% } else { %>

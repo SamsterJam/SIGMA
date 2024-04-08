@@ -68,7 +68,7 @@ class dbInterface {
     getEventData(eventID, password) {
         return this.client.query({
             // Removed rowMode: 'array', to ensure the rows are returned as objects
-            text: "SELECT attended.user_name, attended.email, attended.event_id, attended.time, attended.major, attended.cohort FROM attended INNER JOIN events ON attended.event_id = events.event_id WHERE events.event_id = $1 AND events.event_pass = $2;",
+            text: "SELECT attended.user_name, attended.email, attended.event_id, attended.time, attended.major, attended.cohort, attended.year FROM attended INNER JOIN events ON attended.event_id = events.event_id WHERE events.event_id = $1 AND events.event_pass = $2;",
             values: [eventID, password]
         }).then(result => result.rows); // Return just the rows array
     }
