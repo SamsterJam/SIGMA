@@ -2,18 +2,25 @@
 <html>
 <head>
     <title>View Event Data</title>
-    <!-- Include any necessary CSS files -->
+    <link rel="stylesheet" href="/css/data-view.css">
+    <!-- Replace 'your-stylesheet-name.css' with the actual path to your CSS file -->
 </head>
 <body>
-    <h1>View Event Data</h1>
-    <form action="/view-event-data" method="POST">
-        <label for="eventName">Event Name:</label>
-        <input type="text" id="eventName" name="eventName" required>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        
-        <button type="submit">View Data</button>
-    </form>
+    <div class="container">
+        <h1>View Event Data</h1>
+        <form action="/view-event-data" method="POST" class="form">
+            <div class="form-group">
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" required class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required class="form-control">
+            </div>
+            
+            <button type="submit" class="btn">View Data</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -2,35 +2,21 @@
 <html>
 <head>
     <title>Event Data</title>
-    <!-- Include any necessary CSS files -->
+    <link rel="stylesheet" href="/css/data-view.css">
+    <!-- Replace 'your-stylesheet-name.css' with the actual path to your CSS file -->
 </head>
 <body>
-    <h1>Event Data</h1>
-    <% if (data && data.length > 0) { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>User Name</th>
-                    <th>Email</th>
-                    <th>Event ID</th>
-                    <th>Time</th>
-                    <!-- Add more headers if needed -->
-                </tr>
-            </thead>
-            <tbody>
-                <% data.forEach(function(row) { %>
-                    <tr>
-                        <td><%= row.user_name %></td>
-                        <td><%= row.email %></td>
-                        <td><%= row.event_id %></td>
-                        <td><%= row.time %></td>
-                        <!-- Add more data cells if needed -->
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No data available.</p>
-    <% } %>
+    <div class="container">
+        <h1>Event Data</h1>
+        <% if (data && data.length > 0) { %>
+            <% data.forEach(function(row) { %>
+                <div class="chip">
+                    <%= row.user_name %> - <%= row.email %> - <%= row.event_id %> - <%= new Date(row.time).toLocaleString() %>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No data available.</p>
+        <% } %>
+    </div>
 </body>
 </html>

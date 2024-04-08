@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'BentonSans';
+    src: url('/css/BentonSans-Regular.otf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'BentonSans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #1b1b1b;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+.container {
+    background: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #ddd;
+    color: #333;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #006298;
+    outline: 1px solid #006298;
+}
+
+.btn {
+    background: #990000;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #a11818;
+}
+
+.chip {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: #3a3a3a;
+    margin: 5px;
+    color: #fff;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 600px; /* Adjust the width for desktop */
+    }
+    .chip {
+        font-size: 16px; /* Larger font size for desktop */
+    }
+}
+
+@media (max-height: 500px) {
+    body {
+        align-items: flex-start;
+    }
+}
