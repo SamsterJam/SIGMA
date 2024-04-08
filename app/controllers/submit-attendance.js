@@ -22,7 +22,7 @@ router.post('/', async (req, res, next) => {
             );
 
             if (distance > event.rows[0].radius) {
-                return res.status(400).send('You are not within the required radius of the event location.');
+                return res.status(400).render('location-failed', { event: event.rows[0] });
             }
         }
 
