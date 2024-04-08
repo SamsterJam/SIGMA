@@ -4,6 +4,7 @@
     <title>Event Data</title>
     <link rel="stylesheet" href="/css/data-view.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/c4516edd08.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
@@ -11,7 +12,23 @@
         <% if (data && data.length > 0) { %>
             <% data.forEach(function(row) { %>
                 <div class="chip">
-                    <%= row.user_name %> - <%= row.email %> - <%= row.event_id %> - <%= new Date(row.time).toLocaleString() %> - <%= row.cohort %> - <%= row.year %>
+                    <div class="chip-name">
+                        <%= row.user_name %>
+                    </div>
+                    <div class="chip-info">
+                        <div class="chip-email">
+                            <i class="fas fa-envelope"></i> <%= row.email %>
+                        </div>
+                        <div class="chip-time">
+                            <i class="fas fa-clock"></i> <%= new Date(row.time).toLocaleString() %>
+                        </div>
+                        <div class="chip-cohort">
+                            <i class="fas fa-users"></i> Cohort: <%= row.cohort %>
+                        </div>
+                        <div class="chip-year">
+                            <i class="fas fa-calendar-alt"></i> Year: <%= row.year %>
+                        </div>
+                    </div>
                 </div>
             <% }); %>
         <% } else { %>

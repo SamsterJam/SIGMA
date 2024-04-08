@@ -84,13 +84,33 @@ h1 {
 }
 
 .chip {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     padding: 10px;
     border-radius: 25px;
     background-color: #3a3a3a;
     margin: 5px;
     color: #fff;
     font-size: 14px;
+}
+
+.chip-name {
+    font-weight: bold;
+    margin-right: 10px;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    padding-right: 10px;
+}
+
+.chip-info i {
+    margin-right: 5px;
+    color: #ccc; /* Adjust the color to fit your design */
+}
+
+.chip-email,
+.chip-time,
+.chip-cohort,
+.chip-year {
+    margin: 2px 0;
 }
 
 @media (min-width: 768px) {
