@@ -38,6 +38,7 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="email"],
+.form-group input[type="number"], /* Add this line */
 .form-group textarea {
     width: 100%;
     padding: 10px;
@@ -48,7 +49,10 @@ body {
     /* important for width to work properly */
 }
 
-.form-group :focus {
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="number"]:focus, /* Add this line */
+.form-group textarea:focus {
     border-color: #006298;
     outline: 1px solid #006298;
 }

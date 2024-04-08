@@ -52,8 +52,8 @@ router.post('/', async (req, res, next) => {
 function getTimeStamp() {
     let date = new Date();
     let str = String(date.getFullYear());
-    str += "-" + makePadded(date.getMonth(), 2);
-    str += "-" + makePadded(date.getDay(), 2);
+    str += "-" + makePadded(date.getMonth() + 1, 2); // Month is 0-indexed, add 1
+    str += "-" + makePadded(date.getDate(), 2); // Use getDate() instead of getDay()
     str += "T" + makePadded(date.getHours(), 2);
     str += ":" + makePadded(date.getMinutes(), 2);
     return str;
