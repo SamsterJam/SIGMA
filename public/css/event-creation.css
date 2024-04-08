@@ -5,6 +5,12 @@
     font-style: normal;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 
 body {
     font-family: 'BentonSans', sans-serif;
@@ -30,20 +36,44 @@ body {
 }
 
 .error-container {
-    border-color: #fa0606;
-    border-width: 2px;
-    background: #fb6969;
-    padding: 2px;
-    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+    border: 1px solid #fa0606; 
+    background: #3e1f1f;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
-    margin-bottom: 2px;
+    margin-bottom: 20px;
+    align-items: center;
 }
 
 .error-button {
+    background: #ff7676;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 5px auto 5px auto;
+    max-width: 75%;
+    align-self: center;
+    display: block;
+    font-size: 18px;
+}
+
+.error-button:hover {
+    background: #ffc0c0;
 }
 
 .error-text {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    align-self: center;
+    text-align: center;
 }
 
 @media (max-height: 500px) {
