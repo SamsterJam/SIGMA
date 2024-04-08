@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Data</title>
+    <!-- Include any necessary CSS files -->
+</head>
+<body>
+    <h1>Event Data</h1>
+    <% if (data && data.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Event ID</th>
+                    <th>Time</th>
+                    <!-- Add more headers if needed -->
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function(row) { %>
+                    <tr>
+                        <td><%= row.user_name %></td>
+                        <td><%= row.email %></td>
+                        <td><%= row.event_id %></td>
+                        <td><%= row.time %></td>
+                        <!-- Add more data cells if needed -->
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No data available.</p>
+    <% } %>
+</body>
+</html>

@@ -34,6 +34,23 @@ class dbInterface {
         return (res.rowCount > 0);
     }
 
+    async getEventByName(eventName) {
+        const res = await this.client.query({
+            text: "SELECT * FROM events WHERE event_name = $1",
+            values: [eventName]
+        });
+        return res.rows[0]; // Assuming event_name is unique
+    }
+
+    async verifyEventPassword(eventId, password) {
+        const res = await this.client.query({
+            text: "SELECT event_pass FROM events WHERE event_id = $1",
+            values: [eventId]
+        });
+        const event = res.rows[0];
+        return event && event.event_pass === password; // Replace with password hashing comparison if applicable
+    }
+
     submitAttendance(array) {
         var text;
         switch (array.length) {
@@ -50,10 +67,10 @@ class dbInterface {
 
     getEventData(eventID, password) {
         return this.client.query({
-            rowMode: 'array',
+            // Removed rowMode: 'array', to ensure the rows are returned as objects
             text: "SELECT attended.user_name, attended.email, attended.event_id, attended.time, attended.major, attended.cohort FROM attended INNER JOIN events ON attended.event_id = events.event_id WHERE events.event_id = $1 AND events.event_pass = $2;",
             values: [eventID, password]
-        });
+        }).then(result => result.rows); // Return just the rows array
     }
 
     addEvents(array) {

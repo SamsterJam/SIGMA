@@ -70,6 +70,17 @@ const submit_attendence = require(path.join(CONTROLLERS_DIR, 'submit-attendance.
 app.use('/submit-attendance', submit_attendence);
 
 
+// Route to display the form
+app.get('/view-event-data', (req, res) => {
+    res.render('event-data-view');
+});
+
+// Import the controller for handling form submission
+const viewEventDataController = require(path.join(CONTROLLERS_DIR, 'view-event-data.js'));
+
+// Route to handle form submission
+app.post('/view-event-data', viewEventDataController.handleFormSubmission);
+
 // Custom 404 page middleware
 app.use((req, res, next) => {
     res.status(404).render('404');
