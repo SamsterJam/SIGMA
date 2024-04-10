@@ -55,5 +55,10 @@ router.post('/', async (req, res, next) => {
         next(error);
     }
 });
+
+router.get('/', async (req, res) => {
+    res.render('event-creation');
+});
+
 module.exports = router;
 
