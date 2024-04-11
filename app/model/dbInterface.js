@@ -1,4 +1,3 @@
-//import { Client } from 'pg';
 const pg = require('pg');
 //migth move above to different file
 class dbInterface {
@@ -102,10 +101,3 @@ class dbInterface {
 
 module.exports = dbInterface;
 //add more methods
-//make sure its properly exporting
-//
-//const Event = mongoose.model('Event', eventSchema);
-//const Attendance = mongoose.model('Attendance', attendanceSchema);
-
-
-

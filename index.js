@@ -8,7 +8,6 @@ const CONTROLLERS_DIR = path.join(__dirname, 'app/controllers');
 const MODEL_DIR = path.join(__dirname, 'app/model');
 const ROOT_DIR = __dirname;
 //can add a static dir and more
-//
 
 const app = express();
 const port = 8001;
@@ -80,6 +79,7 @@ const viewEventDataController = require(path.join(CONTROLLERS_DIR, 'view-event-d
 
 // Route to handle form submission
 app.post('/view-event-data', viewEventDataController.handleFormSubmission);
+//change to single page. No reason for two
 
 // Custom 404 page middleware
 app.use((req, res, next) => {
