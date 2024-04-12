@@ -22,6 +22,11 @@
                         <div class="chip-time">
                             <i class="fas fa-clock"></i> <%= new Date(row.time).toLocaleString() %>
                         </div>
+                        <% if (row.major) { %>
+                            <div class="chip-major">
+                                <i class="fas fa-graduation-cap"></i> Major: <%= row.major %>
+                            </div>
+                        <% } %>
                         <% if (row.cohort) { %>
                             <div class="chip-cohort">
                                 <i class="fas fa-users"></i> Cohort: <%= row.cohort %>
