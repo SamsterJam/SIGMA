@@ -80,3 +80,24 @@ p {
         padding: 10px;
     }
 }
+
+.attendance-info {
+    background-color: #333; /* Darker background for the chip */
+    color: #fff;
+    padding: 15px;
+    margin-top: 30px; /* Spacing from the QR code section */
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 0.9em; /* Slightly smaller font size for the chip */
+}
+
+.attendance-info a {
+    color: #4CAF50; /* Use the success color for links */
+    text-decoration: underline; /* Underline to indicate it's clickable */
+    font-weight: bold;
+}
+
+.attendance-info a:hover {
+    color: #66ff66; /* Lighter green for hover effect */
+    text-decoration: none; /* Remove underline on hover */
+}
