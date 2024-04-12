@@ -7,10 +7,13 @@ const QRCode = require('qrcode');
 const dbInterface = require(path.join(root.MODEL_DIR, 'dbInterface.js'));
 const db = new dbInterface();
 
+const isProduction = false; // Set this to false when running locally
+const port = isProduction ? '' : `:${root.port}`;
+
 router.post('/', async (req, res, next) => {
     try {
         const eventId = uuidv4(); // Generate a unique event ID
-        const eventUrl = `http://${root.domain}:${root.port}/event/${eventId}`;
+        const eventUrl = `http://${root.domain}${port}/event/${eventId}`;
         //check if event is taken to fail cleanly
 
         /* keeping code here because it could be modified to display an error message without using in page javascript
