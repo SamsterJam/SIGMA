@@ -11,10 +11,10 @@ CREATE TABLE attended (
 );
 
 CREATE TABLE events (
-    org_name varchar(510) NOT NULL UNIQUE,--prevents duplicate event name
+    org_name varchar(510) NOT NULL,
     org_email varchar(256) NOT NULL,
     event_id varchar(36) NOT NULL UNIQUE,
-    event_name varchar(255) NOT NULL,
+    event_name varchar(255) NOT NULL UNIQUE, --prevents duplicate event name
     req_mcy boolean NOT NULL, --require major cohort year
     event_desc text,
     event_date TIMESTAMPTZ NOT NULL,
