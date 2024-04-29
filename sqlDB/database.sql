@@ -1,4 +1,4 @@
---CREATE DATABASE ligmadb;
+--CREATE DATABASE sigmadb;
 
 CREATE TABLE attended (
     user_name varchar(510), -- 255 + 255
