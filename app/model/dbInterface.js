@@ -5,9 +5,9 @@ class dbInterface {
 
     constructor() {
         this.client = new pg.Client({
-            database: 'ligmadb',
+            database: 'sigmadb',
             port: 5432,
-            username: 'alexsmith'//change in future
+            username: 'sigmauser'//change in future
         });//add more details when there available
         this.client.connect(function(err) {
         if (err) throw err;
